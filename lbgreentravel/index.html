@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <!-- Description: This sample demonstrates how to create a buffer and use it make selection using Mapbox JS api and Turf -->
@@ -15,8 +15,14 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <link href='https://api.mapbox.com/mapbox.js/v3.0.1/mapbox.css' rel='stylesheet' />
     <link href='https://www.mapbox.com/base/latest/base.css' rel='stylesheet' />
-    <link rel="shortcut icon" type="image/x-icon" href="https://dc.gov/sites/default/files/favicon_0.ico">
+    <link rel="icon" href="images/longbeach.png">
     <script src="https://unpkg.com/esri-leaflet@2.0.8"></script>
+    <!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<!-- jQuery library -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<!-- Latest compiled JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <style>
         body {
 
@@ -221,7 +227,6 @@
             left: 50%;
             margin-left: -120px;
             }
-       
     </style>
 </head>
 
@@ -283,8 +288,7 @@
 		  .leaflet-bar.map-text a {
 		    color: #79BD8F;
 		    display: inline;
-		  }
-		        
+		  }     
     </style>
     <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js'></script>
     <link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css' rel='stylesheet' />
@@ -297,13 +301,12 @@
     <link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-locatecontrol/v0.43.0/css/font-awesome.min.css' rel='stylesheet' />
 
    <script src='https://api.mapbox.com/mapbox.js/plugins/mapbox-directions.js/v0.4.0/mapbox.directions.js'></script>
-<link rel='stylesheet' href='https://api.mapbox.com/mapbox.js/plugins/mapbox-directions.js/v0.4.0/mapbox.directions.css' type='text/css' />
-<script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v1.0.0/leaflet.markercluster.js'></script>
-<link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v1.0.0/MarkerCluster.css' rel='stylesheet' />
-<link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v1.0.0/MarkerCluster.Default.css' rel='stylesheet' />
-
-<link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-draw/v0.2.3/leaflet.draw.css' rel='stylesheet' />
-<script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-draw/v0.2.3/leaflet.draw.js'></script>
+	<link rel='stylesheet' href='https://api.mapbox.com/mapbox.js/plugins/mapbox-directions.js/v0.4.0/mapbox.directions.css' type='text/css' />
+	<script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v1.0.0/leaflet.markercluster.js'></script>
+	<link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v1.0.0/MarkerCluster.css' rel='stylesheet' />
+	<link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v1.0.0/MarkerCluster.Default.css' rel='stylesheet' />
+	<link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-draw/v0.2.3/leaflet.draw.css' rel='stylesheet' />	
+	<script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-draw/v0.2.3/leaflet.draw.js'></script>
 
     <div id='map'> </div>
         <div class='header'>
@@ -347,42 +350,36 @@
         <div id="about">
             <a id="dismiss-about" onclick="closeAbout()">×</a>
             <div id="inner">
-                <p style="font-size: 1.4em; text-transform: uppercase; text-align: center">
+            <div id="logos" style="text-align: center">
+                    <img src="http://www.longbeach.gov/common/img/city-logo.png" title="Long Beach, California">
+                </div>
+                <p style="font-size: 1em; text-transform: uppercase; text-align: center"><br>
                     About this Web Map
                 </p>
-                <p style="font-size: 1.2em; text-align: center"><a href ="https://www.linkedin.com/in/anshu-pallav">Created by: Anshu Pallav</a></p>
-                <p style="font-size: 0.8em;">This website is developed as a part of final project for the MS GIS Batch 2017 from California State University Long Beach. It is has been created using open source enterprise GIS architecture. This website shows the sustainable travel options available. The code to create a buffer and use it make selection using Mapbox JS api and Turf was downloaded from GitHub and modified for this project."</p>
                 <p>
                     <strong>Instructions</strong>
-                    <br /> Click a location or enter an address to find bike share location in 0.5 miles. The blue marker can be dragged across the map and buffer area can be changed by scrolling.   
+                    <br /> Click a location or enter an address to find bike share location in 0.5 miles. The blue marker can be dragged across the map and buffer area can be changed by scrolling. On clicking on the red bike share marker, walking route is displayed along with the estimated arrival time. Additional routing mechanism can be used to navigate from start to end location using driving, walking and cycling modes. Basemap and data Layers can be accessed from the layer list. Coordinate information of the blue marker can be seen. Options to print map, share the website and submit a suggestion are also included in the website.
                 </p>
                 <p>
                     <strong>Built with...</strong>
                     <br /> <a href="https://www.mapbox.com/mapbox.js/api/v3.1.1/">Mapbox JS</a>, <a href="https://www.mapbox.com/analysis/">Turf</a>, <a href="https://jquery.com/">jQuery</a>, <a href="http://geoserver.org/">GeoServer</a>, <a href="https://www.postgresql.org/">PostgreSQL</a>, <a href="http://postgis.net/">PostGIS</a>, <a href="https://aws.amazon.com/">AWS</a>
                 </p>
                 <p>
-                    <strong>Download Bike Share Data in GeoJSON</strong>
-                    <br /><a href="https://opendata.arcgis.com/datasets/167bb084757842daa22a56023759c995_14.geojson">https://opendata.arcgis.com/datasets/a1f7acf65795451d89f0a38565a975b3_5.geojson</a></strong>
+                    <strong>Long Beach Open Data</strong>
+                    <br /><a href="http://datalb.longbeach.gov/" target="_blank">Long Beach Open Data Portal</a>
                 </p>
                 <p>
                     <strong>ArcGIS Open GIS Data Services</strong>
                     <br /><a href="https://hub.arcgis.com/pages/open-data" target="_blank">https://hub.arcgis.com/pages/open-data</a>
                 </p>
-                <p>
-                    <strong>Long Beach Open Data</strong>
-                    <br /><a href="http://datalb.longbeach.gov/" target="_blank">Long Beach Open Data Portal</a>
-                </p>
-               
-                <div id="logos" style="text-align: center">
-                    <img src="http://www.longbeach.gov/common/img/city-logo.png" title="Long Beach, California">
+                
+                <p style="font-size: 1em; text-align: center"><a href ="https://www.linkedin.com/in/anshu-pallav">Created by: Anshu Pallav</a></p>
+                <p style="font-size: 0.8em;">This website is developed as a part of final project for the MS GIS Batch 2017 from California State University Long Beach. It is has been created using open source enterprise GIS architecture. This website shows the sustainable travel options available. The code to create a buffer and use it make selection using Mapbox JS api and Turf was downloaded from GitHub and modified for this project."</p>
                 </div>
-            </div>
         </div>
     <div id="selectedFeatures" class="leaflet-bar map-text">Click to identify <a href="http://tsdgis.longbeach.gov/webgis/rest/services/OPENDATA/MapItData/MapServer">Name/Address</a>
     <script>
 		
-	
-
         var bikeGeoJsonUrl = "https://opendata.arcgis.com/datasets/167bb084757842daa22a56023759c995_14.geojson";
 
         //Replace with your own token
@@ -431,6 +428,20 @@
                                 layers:'LongBeach:LB_Basemap'
 
                             }),
+                            Elevation: L.tileLayer.wms('http://52.33.188.225:8080/geoserver/LongBeach/wms',
+                            {
+                                format: 'image/png', 
+                                transparent: true,
+                                version: '1.1.0',
+                                layers:'LongBeach:LB_DEM'
+                            }),
+                            Slope: L.tileLayer.wms('http://52.33.188.225:8080/geoserver/LongBeach/wms',
+                            {
+                                format: 'image/png', 
+                                transparent: true,
+                                version: '1.1.0',
+                                layers:'LongBeach:lbslope'
+                            }),
                             Major_Roads: L.tileLayer.wms('http://52.33.188.225:8080/geoserver/LongBeach/wms',
                             {
                                 format: 'image/png', 
@@ -459,14 +470,14 @@
                                 version: '1.1.0',
                                 layers:'LongBeach:parks'
                             }),
+                            Points_Of_Interest: L.esri.dynamicMapLayer({ url:'http://tsdgis.longbeach.gov/webgis/rest/services/OPENDATA/MapItData/MapServer', opacity : 0.5}),
                             Tourist_Zones: L.tileLayer.wms('http://52.33.188.225:8080/geoserver/LongBeach/wms',
                             {
                                 format: 'image/png', 
                                 transparent: true,
                                 version: '1.1.0',
                                 layers:'LongBeach:touristZones'
-                            }),
-                            Points_Of_Interest: L.esri.dynamicMapLayer({ url:'http://tsdgis.longbeach.gov/webgis/rest/services/OPENDATA/MapItData/MapServer', opacity : 0.5})
+                            })                            
                         }).addTo(map);
 
            				var poi = L.esri.dynamicMapLayer({ url:'http://tsdgis.longbeach.gov/webgis/rest/services/OPENDATA/MapItData/MapServer', opacity : 0}).addTo(map);
