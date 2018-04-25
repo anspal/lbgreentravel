@@ -1,0 +1,256 @@
+
+        body {
+
+            margin: 0;
+            padding: 0;
+        }
+
+        path {
+            pointer-events: none;
+        }
+
+        #map {
+            position: absolute;
+            top: 2px;
+            bottom: 2px;
+            width: 100%;
+        }
+
+        a {
+            color: #fff;
+            font-family: 'open_sansregular', sans-serif;
+        }
+
+        .leaflet-popup-content .marker-title {
+            font-weight: 400;
+            color: #999;
+            line-height: 1.3em;
+        }
+
+        .marker-title {
+            color: #00704A;
+            font-weight: bold;
+        }
+
+        #findme {
+            display: none;
+            background: #353333;
+        }
+
+        #milecount {
+            line-height: 2em;
+            color: #fff;
+        }
+
+        #search-results {
+            height: 0px;
+            overflow: visible;
+            display: none;
+        }
+
+        input:focus + #search-results,
+        #search-results:active {
+            display: block;
+        }
+
+        .result {
+            background: gray;
+            width: 20vw;
+            height: 10vw;
+            display: block;
+            padding: 10px;
+            cursor: pointer;
+            line-height: 1.4em;
+            color:#fff;
+        }
+
+        .result:hover {
+            font-weight: bold;
+            font-style: italic;
+        }
+
+        .leaflet-container {
+            cursor: default;
+        }
+
+        .leaflet-marker-icon {
+            cursor: default;
+        }
+
+        .leaflet-popup-content {
+            padding: 10px;
+        }
+
+        .leaflet-marker-icon:active ~ * {
+            pointer-events: none;
+        }
+
+        .leaflet-marker-draggable:hover {
+            cursor: -webkit-grab;
+        }
+
+        .leaflet-marker-draggable:active {
+            cursor: -webkit-grabbing;
+        }
+
+        path[stroke-opacity='1'] {
+            stroke-dashoffset: 10000;
+            stroke-dasharray: 10000;
+            -webkit-transition: stroke-dashoffset 6s;
+        }
+
+        .distance-icon {
+            border-radius: 10px;
+            background: #fff;
+            color: #00704A;
+            text-align: center;
+            display: inline-block;
+            border: 2px solid #00704A;
+        }
+
+        a:link {
+            color: white;
+            background-color: transparent;
+            text-decoration: underline;
+        }
+   
+        /*styling for title bar and about pop over */
+
+        #title {
+            color: #FFF;
+            font-family: "open_sanssemibold", sans-serif;
+            padding: 10 10 10 30;
+            font-size: 15px;
+            line-height: 20px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .header {
+            position: relative;
+            padding: 1vw 1vw 1vw 1vw;
+            left: 25%; width:60%;
+           	background-color: rgb(12, 12, 12);
+            box-shadow: 0 3px 5px 0 rgba(0, 0, 0, .75);
+            opacity: 0.6;
+        }
+
+        #search-panel {
+            position: absolute;
+            background-color: #505050;
+            top:80%;
+            left: 1vw;
+            padding: 10px;
+            border-radius: 1vw;
+            width:20%;
+        }
+
+        #about {
+            padding: 1vw 2vw 1vw 2vw;
+            z-index: 4000;
+            position: absolute;
+            background-color: #505050;
+            color: white;
+            width: 60%;
+            left: 25%;
+            height: 40%
+            top: 20%;
+            display: true;
+            overflow: hidden;
+            opacity: 0.90;
+        }
+
+        #dismiss-about {
+            cursor: pointer;
+            font-size: 15px;
+            float: right;
+        }
+
+        #inner {
+            width: 100%;
+            height: calc(100% - 60px);
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+       
+  
+       #search-paneldirections {
+            position: absolute;
+            background-color: ;
+            top: 1vw;
+            left: 10%;
+            padding: 1vw;
+            border-radius: 1vw;
+            }
+
+        #result-div {
+            position: absolute;
+            bottom: 4vw;
+            left: 50%;
+            background: #505050;
+            padding: 1vw;
+            border-radius: 1vw;
+            left: 50%;
+            margin-left: -120px;
+            }
+
+        #inputs,
+        #errors,
+        #directions {
+            position: absolute;
+            width: 15%;
+            max-width: 200px;
+            min-width: 100px;
+        }
+
+        #inputs {
+            z-index: 10;
+            top: 10px;
+            left: 10px;
+        }
+
+        #directions {
+            z-index: 99;
+            background: rgba(0,0,0,.8);
+            top: 35%;
+            left: 1vw;
+            bottom: 25%;
+            width:20%;
+            overflow: auto;
+            border-radius:8px;
+        }
+
+        #errors {
+            z-index: 8;
+            opacity: 0;
+            padding: 10px;
+            border-radius: 0 0 3px 3px;
+            background: rgba(0,0,0,.25);
+            top: 90px;
+            left: 10px;
+        }
+        pre.ui-coordinates {
+          position:absolute;
+          bottom: 2vw;
+          right:1vw;
+          padding:0.5vw 0.5vw;
+          background:rgba(0,0,0,0.5);
+          color:#fff;
+          font-size:1vw;
+          line-height:16px;
+          border-radius:1vw;
+          }
+          #selectedFeatures {
+            position: absolute;
+            bottom: 8vw;
+            right: 1vw;
+            z-index: 1000;
+            background: ;
+            }
+          .leaflet-bar.map-text a {
+            color: #79BD8F;
+            display: inline;
+          }     
+   

@@ -1,6 +1,6 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
-<head>
+    <head>
     <!-- Description: This sample demonstrates how to create a buffer and use it make selection using Mapbox JS api and Turf -->
     <!-- Attribution:
     Peter Liu, Find your nearest cup of coffee with Turf, Url: https://www.mapbox.com/blog/coffee-with-turf/
@@ -8,284 +8,22 @@
     Styling inspired by Esri Story Map: https://storymaps.esri.com/stories/2016/top-stories/
     -->
     <meta charset="utf-8">
-    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <title>Find Nearest Bike Share Location @ Long Beach, CA</title>
     <script src='https://api.mapbox.com/mapbox.js/v3.0.1/mapbox.js'></script>
     <script src='https://api.tiles.mapbox.com/mapbox.js/plugins/turf/v1.3.0/turf.min.js'></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <link href='https://api.mapbox.com/mapbox.js/v3.0.1/mapbox.css' rel='stylesheet' />
     <link href='https://www.mapbox.com/base/latest/base.css' rel='stylesheet' />
-    <link rel="shortcut icon" type="image/x-icon" href="https://dc.gov/sites/default/files/favicon_0.ico">
+    <link rel="icon" href="images/longbeach.png">
     <script src="https://unpkg.com/esri-leaflet@2.0.8"></script>
-    <style>
-        body {
+    <!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<!-- jQuery library -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<!-- Latest compiled JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-            margin: 0;
-            padding: 0;
-        }
-
-        path {
-            pointer-events: none;
-        }
-
-        #map {
-            position: absolute;
-            top: 50px;
-            bottom: 10px;
-            width: 100%;
-        }
-
-        a {
-            color: #fff;
-            font-family: 'open_sansregular', sans-serif;
-        }
-
-        .leaflet-popup-content .marker-title {
-            font-weight: 400;
-            color: #999;
-            line-height: 1.3em;
-        }
-
-        .marker-title {
-            color: #00704A;
-            font-weight: bold;
-        }
-
-        #findme {
-            display: none;
-            background: #353333;
-        }
-
-        #milecount {
-            line-height: 2em;
-            color: #fff;
-        }
-
-        #search-results {
-            height: 0px;
-            overflow: visible;
-            display: none;
-        }
-
-        input:focus + #search-results,
-        #search-results:active {
-            display: block;
-        }
-
-        .result {
-            background: gray;
-            width: 260px;
-            display: block;
-            padding: 10px;
-            cursor: pointer;
-            line-height: 1.4em;
-            color:#fff;
-        }
-
-        .result:hover {
-            font-weight: bold;
-            font-style: italic;
-        }
-
-        .leaflet-container {
-            cursor: default;
-        }
-
-        .leaflet-marker-icon {
-            cursor: default;
-        }
-
-        .leaflet-popup-content {
-            padding: 10px;
-        }
-
-        .leaflet-marker-icon:active ~ * {
-            pointer-events: none;
-        }
-
-        .leaflet-marker-draggable:hover {
-            cursor: -webkit-grab;
-        }
-
-        .leaflet-marker-draggable:active {
-            cursor: -webkit-grabbing;
-        }
-
-        path[stroke-opacity='1'] {
-            stroke-dashoffset: 10000;
-            stroke-dasharray: 10000;
-            -webkit-transition: stroke-dashoffset 6s;
-        }
-
-        .distance-icon {
-            border-radius: 10px;
-            background: #fff;
-            color: #00704A;
-            text-align: center;
-            display: inline-block;
-            border: 2px solid #00704A;
-        }
-
-        a:link {
-            color: white;
-            background-color: transparent;
-            text-decoration: underline;
-        }
-   
-        /*styling for title bar and about pop over */
-
-        #title {
-            color: #FFF;
-            font-family: "open_sanssemibold", sans-serif;
-            padding: 10 10 10 40;
-            font-size: 20px;
-            line-height: 20px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .header {
-            position: relative;
-            padding: 10px 10px 10px 10px;
-           
-            background-color: rgb(12, 12, 12);
-            box-shadow: 0 3px 5px 0 rgba(0, 0, 0, .75);
-            opacity: 0.8;
-        }
-
-        #search-panel {
-            position: absolute;
-            background-color: #505050;
-            bottom: 60px;
-            left: 10px;
-            padding: 10px;
-            border-radius: 5px;
-        }
-
-        #about {
-            padding: 10px 20px 20px 20px;
-            z-index: 4000;
-            position: absolute;
-            background-color: #505050;
-            color: white;
-            width: 700px;
-            left: 50%;
-            margin-left: -300px;
-            height: calc(100% - 200px);
-            top: 100px;
-            display: none;
-            overflow: hidden;
-            opacity: 0.95;
-        }
-
-        #dismiss-about {
-            cursor: pointer;
-            font-size: 30px;
-            float: right;
-            margin-bottom: 10px;
-        }
-
-        #inner {
-            width: 100%;
-            height: calc(100% - 60px);
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        #result-div {
-            position: absolute;
-            bottom: 20px;
-            background: #505050;
-            padding: 10px;
-            border-radius: 5px;
-            left: 50%;
-            margin-left: -120px;
-        }
-  
-       #search-paneldirections {
-            position: absolute;
-            background-color: #505050;
-            top: 10px;
-            left: 50px;
-            padding: 10px;
-            border-radius: 5px;
-            }
-
-        #result-div {
-            position: absolute;
-            bottom: 40px;
-            background: #505050;
-            padding: 10px;
-            border-radius: 5px;
-            left: 50%;
-            margin-left: -120px;
-            }
-       
-    </style>
-</head>
-
-<body>
-    <style>
-        #inputs,
-        #errors,
-        #directions {
-            position: absolute;
-            width: 15%;
-            max-width: 200px;
-            min-width: 100px;
-        }
-
-        #inputs {
-            z-index: 10;
-            top: 10px;
-            left: 10px;
-        }
-
-        #directions {
-            z-index: 99;
-            background: rgba(0,0,0,.8);
-            top: 130px;
-            left: 10px;
-            bottom: 200px;
-            overflow: auto;
-            border-radius:8px;
-        }
-
-        #errors {
-            z-index: 8;
-            opacity: 0;
-            padding: 10px;
-            border-radius: 0 0 3px 3px;
-            background: rgba(0,0,0,.25);
-            top: 90px;
-            left: 10px;
-        }
-        pre.ui-coordinates {
-		  position:absolute;
-		  bottom:10px;
-		  left:10px;
-		  padding:5px 10px;
-		  background:rgba(0,0,0,0.5);
-		  color:#fff;
-		  font-size:11px;
-		  line-height:18px;
-		  border-radius:3px;
-		  }
-		  #selectedFeatures {
-		    position: absolute;
-		    bottom: 100px;
-		    right: 10px;
-		    z-index: 1000;
-		    background: white;
-		    padding: 1em;
-		  }
-		  .leaflet-bar.map-text a {
-		    color: #79BD8F;
-		    display: inline;
-		  }
-		        
-    </style>
     <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js'></script>
     <link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css' rel='stylesheet' />
 
@@ -296,535 +34,93 @@
         <![endif]-->
     <link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-locatecontrol/v0.43.0/css/font-awesome.min.css' rel='stylesheet' />
 
-   <script src='https://api.mapbox.com/mapbox.js/plugins/mapbox-directions.js/v0.4.0/mapbox.directions.js'></script>
-<link rel='stylesheet' href='https://api.mapbox.com/mapbox.js/plugins/mapbox-directions.js/v0.4.0/mapbox.directions.css' type='text/css' />
-<script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v1.0.0/leaflet.markercluster.js'></script>
-<link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v1.0.0/MarkerCluster.css' rel='stylesheet' />
-<link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v1.0.0/MarkerCluster.Default.css' rel='stylesheet' />
+    <script src='https://api.mapbox.com/mapbox.js/plugins/mapbox-directions.js/v0.4.0/mapbox.directions.js'></script>
+    <link rel='stylesheet' href='https://api.mapbox.com/mapbox.js/plugins/mapbox-directions.js/v0.4.0/mapbox.directions.css' type='text/css' />
+    <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v1.0.0/leaflet.markercluster.js'></script>
+    <link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v1.0.0/MarkerCluster.css' rel='stylesheet' />
+    <link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v1.0.0/MarkerCluster.Default.css' rel='stylesheet' />
+    <link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-draw/v0.2.3/leaflet.draw.css' rel='stylesheet' />  
+    <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-draw/v0.2.3/leaflet.draw.js'></script>
+    <link rel='stylesheet' href='index.css' type='text/css'/>
 
-<link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-draw/v0.2.3/leaflet.draw.css' rel='stylesheet' />
-<script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-draw/v0.2.3/leaflet.draw.js'></script>
+    </head>
 
-    <div id='map'> </div>
-        <div class='header'>
-            
-            <div id="title"><center>Long Beach Sustainable Tourism Webmap</center></div>
-           <div style="float:right">
-                <a style="color:rgb(100,100,100); font-size:14px; " href="javascript:void(0)" onclick="openAbout()">About This Map</a>
-            </div>
-            <div>
-                <a style="color:rgb(206,206,206);font-size:14px"><center>Search Nearest 'Bike Share' / Major Roads / Bike Routes / Get Routing Details / Look Up Points of Interest </center></a>
-            </div>
-            
-            
-        </div>
+    <body>
+   
         
-
-        <div id="search-panel">
-            <span id="geolocation-prompt" style="font-weight: bold; color: white; font-size: 0.75em;">To use your current location,<br> enable browser's location tracking</span>
-            <span style="font-weight: bold; color: white; margin-top: 5px; display: block; ">Enter your location address</span>
-
-            <div style="margin-right: 5px; margin-top: 5px;">
-                <span class='button short fr icon satellite' id='findme'>Use My Location</span>
-                <fieldset class="fr with-icon inline" style="float:left;">
-                    <span class="icon search" style='top:5px; left:5px'></span>
-                    <input type="text" placeholder='Search' class="round short" autocomplete="off" style='width:150px;margin-right:10px; background-color: gray; color:#fff;'>
-                    <div id='search-results'>
-                    </div>
-                </fieldset>
-            </div>
-        </div>
-        <div id="result-div">
-            <span style="color:white">Found </span><span id='milecount' class='strong'>0</span><span style="color:white"> Bike Share Locations within </span><span id='distance' style="color:white">0.5 miles</span>
-        </div>
-        <div id='inputs'></div>
-                            <div id='errors'></div>
-                            <div id='directions'>
-                                <div id='routes'></div>
-                                <div id='instructions'></div>
-                            </div>
-                            <pre id='coordinates' class='ui-coordinates'></pre>
-        <div id="about">
-            <a id="dismiss-about" onclick="closeAbout()">×</a>
-            <div id="inner">
-                <p style="font-size: 1.4em; text-transform: uppercase; text-align: center">
-                    About this Web Map
-                </p>
-                <p style="font-size: 1.2em; text-align: center"><a href ="https://www.linkedin.com/in/anshu-pallav">Created by: Anshu Pallav</a></p>
-                <p style="font-size: 0.8em;">This website is developed as a part of final project for the MS GIS Batch 2017 from California State University Long Beach. It is has been created using open source enterprise GIS architecture. This website shows the sustainable travel options available. The code to create a buffer and use it make selection using Mapbox JS api and Turf was downloaded from GitHub and modified for this project."</p>
-                <p>
-                    <strong>Instructions</strong>
-                    <br /> Click a location or enter an address to find bike share location in 0.5 miles. The blue marker can be dragged across the map and buffer area can be changed by scrolling.   
-                </p>
-                <p>
-                    <strong>Built with...</strong>
-                    <br /> <a href="https://www.mapbox.com/mapbox.js/api/v3.1.1/">Mapbox JS</a>, <a href="https://www.mapbox.com/analysis/">Turf</a>, <a href="https://jquery.com/">jQuery</a>, <a href="http://geoserver.org/">GeoServer</a>, <a href="https://www.postgresql.org/">PostgreSQL</a>, <a href="http://postgis.net/">PostGIS</a>, <a href="https://aws.amazon.com/">AWS</a>
-                </p>
-                <p>
-                    <strong>Download Bike Share Data in GeoJSON</strong>
-                    <br /><a href="https://opendata.arcgis.com/datasets/167bb084757842daa22a56023759c995_14.geojson">https://opendata.arcgis.com/datasets/a1f7acf65795451d89f0a38565a975b3_5.geojson</a></strong>
-                </p>
-                <p>
-                    <strong>ArcGIS Open GIS Data Services</strong>
-                    <br /><a href="https://hub.arcgis.com/pages/open-data" target="_blank">https://hub.arcgis.com/pages/open-data</a>
-                </p>
-                <p>
-                    <strong>Long Beach Open Data</strong>
-                    <br /><a href="http://datalb.longbeach.gov/" target="_blank">Long Beach Open Data Portal</a>
-                </p>
-               
-                <div id="logos" style="text-align: center">
-                    <img src="http://www.longbeach.gov/common/img/city-logo.png" title="Long Beach, California">
+        <div id='map'> </div>
+            <div class='header'>
+                <div id="title"><center>Long Beach Sustainable Tourism</center></div>
+                <div><center>
+                    <a style="color:rgb(206,206,206);font-size:12px">Search Bike Share Locations | Check Bike Routes | Get Routing Details | Get Elevation/Slope | Find Points of Interest</a> &nbsp<a style="color:rgb(255,255,0); font-size:12px; " href="javascript:void(0)" onclick="openAbout()">About this Web Map</a>
+                    </center>
                 </div>
             </div>
-        </div>
-    <div id="selectedFeatures" class="leaflet-bar map-text">Click to identify <a href="http://tsdgis.longbeach.gov/webgis/rest/services/OPENDATA/MapItData/MapServer">Name/Address</a>
-    <script>
-		
-	
-
-        var bikeGeoJsonUrl = "https://opendata.arcgis.com/datasets/167bb084757842daa22a56023759c995_14.geojson";
-
-        //Replace with your own token
-        L.mapbox.accessToken = "pk.eyJ1Ijoib2N0b2RjIiwiYSI6ImNpeWRjZm0yNDAwMDUzMGs1Z3JyZmd2NXQifQ.Y8a2TFYzj-5Oy3hTVb9cfw";
-
-        var map = L.mapbox.map('map', 'mapbox.streets', {maxZoom: 19,  minZoom: 9, zoomControl: false}).setView([33.81, -118.15], 12);
-        
-        var marker = L.marker(new L.LatLng(33.789930, -118.142429), {
-            icon: L.mapbox.marker.icon({
-                "marker-color": "#0000ff",
-                "title": "where is bikeshare?",
-                "marker-symbol": "pitch",
-                "marker-size": "large"
-            }),
-            draggable: true,
-            zIndexOffset: 999
-        });
-
-		// every time the marker is dragged, update the coordinates container
-        marker.on('dragend', ondragend);
-
-        var coordinates = document.getElementById('coordinates');
-
-        function ondragend() {
-			    var m = marker.getLatLng();
-			    coordinates.innerHTML = 'Latitude: ' + m.lat + '<br />Longitude: ' + m.lng;
-			}
-
-        var currentPosition;
-        var currentRadius = 0.5;
-
-        new L.Control.Zoom({position: 'topright'}).addTo(map); 
-        L.control.fullscreen({position:'topright'}).addTo(map); 
-        L.control.layers({ 
-                            Streets: L.mapbox.tileLayer('mapbox.streets'),
-                            Outdoors: L.mapbox.tileLayer('mapbox.outdoors'),
-                            Dark: L.mapbox.tileLayer('mapbox.dark'),
-                            Satellite: L.mapbox.tileLayer('mapbox.satellite')
-                            },
-                            {
-                            LB_Basemap: L.tileLayer.wms('http://52.33.188.225:8080/geoserver/LongBeach/wms',
-                            {
-                                format: 'image/png', 
-                                transparent: true,
-                                version: '1.1.0',
-                                layers:'LongBeach:LB_Basemap'
-
-                            }),
-                            Major_Roads: L.tileLayer.wms('http://52.33.188.225:8080/geoserver/LongBeach/wms',
-                            {
-                                format: 'image/png', 
-                                transparent: true,
-                                version: '1.1.0',
-                                layers:'LongBeach:major_streets'
-                            }),
-                            Bikeways: L.tileLayer.wms('http://52.33.188.225:8080/geoserver/LongBeach/wms',
-                            {
-                                format: 'image/png', 
-                                transparent: true,
-                                version: '1.1.0',
-                                layers:'LongBeach:bikeways'
-                            }),
-                            Proposed_Bikeways: L.tileLayer.wms('http://52.33.188.225:8080/geoserver/LongBeach/wms',
-                            {
-                                format: 'image/png', 
-                                transparent: true,
-                                version: '1.1.0',
-                                layers:'LongBeach:proposed_bikeways'
-                            }),
-                            Parks: L.tileLayer.wms('http://52.33.188.225:8080/geoserver/LongBeach/wms',
-                            {
-                                format: 'image/png', 
-                                transparent: true,
-                                version: '1.1.0',
-                                layers:'LongBeach:parks'
-                            }),
-                            Tourist_Zones: L.tileLayer.wms('http://52.33.188.225:8080/geoserver/LongBeach/wms',
-                            {
-                                format: 'image/png', 
-                                transparent: true,
-                                version: '1.1.0',
-                                layers:'LongBeach:touristZones'
-                            }),
-                            Points_Of_Interest: L.esri.dynamicMapLayer({ url:'http://tsdgis.longbeach.gov/webgis/rest/services/OPENDATA/MapItData/MapServer', opacity : 0.5})
-                        }).addTo(map);
-
-           				var poi = L.esri.dynamicMapLayer({ url:'http://tsdgis.longbeach.gov/webgis/rest/services/OPENDATA/MapItData/MapServer', opacity : 0}).addTo(map);
-           				
-           				var identifiedFeature;
-  						var pane = document.getElementById('selectedFeatures');
-
-			          map.on('click', function (e) {
-						    pane.innerHTML = 'Loading';
-						    if (identifiedFeature){
-						      map.removeLayer(identifiedFeature);
-						    }
-						    poi.identify().on(map).at(e.latlng).run(function(error, featureCollection){
-						      // make sure at least one feature was identified.
-						      if (featureCollection.features.length > 0) {
-						        identifiedFeature = L.geoJSON(featureCollection.features[0]).addTo(map);
-						        var poiDescription =
-						          featureCollection.features[0].properties['NAME'] +
-						          ' - ' +
-						          featureCollection.features[0].properties['ADDRESS'];
-						        pane.innerHTML = poiDescription;
-						      }
-						      else {
-						        pane.innerHTML = 'No features identified.';
-						      }
-						    });
-						  });                
-                             
-
-	// Since featureLayer is an asynchronous method, we use the `.on('ready' call to only use its marker data once we know it is actually loaded.
-		L.mapbox.featureLayer('https://opendata.arcgis.com/datasets/167bb084757842daa22a56023759c995_14.geojson').on('ready', function(e) {
-			    // The clusterGroup gets each marker in the group added to it
-			    // once loaded, and then is added to the map
-			    	var clusterGroup = new L.MarkerClusterGroup({
-			      // The iconCreateFunction takes the cluster as an argument and returns
-			      // an icon that represents it. We use L.mapbox.marker.icon in this
-			      // example, but you could also use L.icon or L.divIcon.
-			      iconCreateFunction: function(cluster) {
-			        return L.mapbox.marker.icon({
-			          // show the number of markers in the cluster on the icon.
-			          'marker-symbol': cluster.getChildCount(),
-			          'marker-color': '#422'
-			        });
-			      }
-			    });
-			    e.target.eachLayer(function(layer) {
-			        clusterGroup.addLayer(layer);
-			    });
-			    map.addLayer(clusterGroup);
-			});					
-
-		
-// create the initial directions object, from which the layer and inputs will pull data.
-                                var directions = L.mapbox.directions({
-                                    profile: 'mapbox.cycling'
-                                });
-
-                                var directionsLayer = L.mapbox.directions.layer(directions)
-                                    .addTo(map);
-
-                                var directionsInputControl = L.mapbox.directions.inputControl('inputs', directions)
-                                    .addTo(map);
-
-                                var directionsErrorsControl = L.mapbox.directions.errorsControl('errors', directions)
-                                    .addTo(map);
-
-                                var directionsRoutesControl = L.mapbox.directions.routesControl('routes', directions)
-                                    .addTo(map);
-
-                                var directionsInstructionsControl = L.mapbox.directions.instructionsControl('instructions', directions)
-                                    .addTo(map);
-
-                            //FUNCTION FOR BIKE STATIONS
-                            
-                            function bikehandleJson(data) {
-                                console.log(data)
-                                bikegeojsonLayer = new L.GeoJSON(data, {
-
-                                    onEachFeature: onEachFeature,
-                                });
-                                bikegeojsonLayer.addData(data);
-                                map.addLayer(bikegeojsonLayer); 
-
-
-                            }
-
-                            /*var bikeUrl = "http://52.33.188.225:8080/geoserver/LongBeach/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=LongBeach:bike_facilities&maxFeatures=50&outputFormat=text%2Fjavascript&format_options=callback:getJson";
-
-                            $.ajax({
-                                url : bikeUrl,
-                                dataType : 'jsonp',
-                                jsonpCallback: 'getJson',
-                                success : bikehandleJson
-                            });
-
-                            var popup = L.popup();
-                            function onEachFeature(feature, layer) {
-                               var popupcontent = [];
-
-
-                                for (var prop in feature.properties) {
-                                    popupcontent.push('<tr><td><strong>' + prop + ': </strong></td><td>' + feature.properties[prop] + '</td></tr>');
-                                }
-
-                                layer.bindPopup('<table>' + popupcontent.join("</tr>") + '</table>');
-                            };*/
-
-
-
-        //Geocoder lookup
-        var geocoder = L.mapbox.geocoder('mapbox.places-v1');
-        
-        //geolocation
-        function getLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(showPosition);
-            }
-        }
-
-        function showPosition(position) {
-            $('#findme').show();
-            $('#geolocation-prompt').hide();
-            currentPosition = [position.coords.latitude, position.coords.longitude];
-        }
-
-        function pointBuffer(pt, radius, units, resolution) {
-            var ring = []
-            var resMultiple = 360 / resolution;
-            for (var i = 0; i < resolution; i++) {
-                var spoke = turf.destination(pt, radius, i * resMultiple, units);
-                ring.push(spoke.geometry.coordinates);
-            }
-            if ((ring[0][0] !== ring[ring.length - 1][0]) && (ring[0][1] != ring[ring.length - 1][1])) {
-                ring.push([ring[0][0], ring[0][1]]);
-            }
-            return turf.polygon([ring])
-        }
-
-        $.get(bikeGeoJsonUrl, function (data) {
-
-            var fc = (data);
-
-            //find me functionality
-            $('#findme').on('click', function () {
-                marker.setLatLng(currentPosition);
-                map.setView(currentPosition, 15);
-                updateVenues();
-            });
-
-            //click-move functionality
-            map.on('click', function (e) {
-                marker.setLatLng([e.latlng.lat, e.latlng.lng]);
-                map.setView([e.latlng.lat, e.latlng.lng], 15);
-                updateVenues();
-            });
-
-            //input search functionality
-            $('fieldset input').keyup(function (event) {
-                var addrs = [];
-                var addrCoords = [];
-                var contents = $('fieldset input').val();
-                var url = 'https://api.tiles.mapbox.com/v4/geocode/mapbox.places/' + contents + '.json?access_token=' + L.mapbox.accessToken;
-
-                $.get(url, function (data) {
-                    $('.result').remove();
-                    data.features.forEach(function (result) {
-                        var place = result['place_name'];
-                        var reg = new RegExp(contents, "gi");
-
-                        var dcplace = "Long Beach";
-                        if (place.includes(dcplace)) {
-                            place = place.replace(dcplace, "CA");
-                            place = place.replace(", United States", "");
-                            addrCoords.push(result.center);
-                            addrs.push(place);
-                            place = place.replace(reg, function (match) {
-                                return "<strong>" + match + "</strong>"
-                            });
-
-                            $('#search-results')
-                                .append('<div class="result keyline-bottom keyline-left keyline-right small">' + place + '</div>');
-                        }
-                    });
-                    $('.result').each(function (index) {
-                        var dcplace = "Long Beach";
-
-                        $(this).on('click', function () {
-                            var coords = addrCoords[index];
-                            $('fieldset input').val(addrs[index]);
-
-                            map.setView([coords[1], coords[0]], 15);
-                            marker.setLatLng([coords[1], coords[0]]);
-                            marker.addTo(map);
-                            updateVenues();
-                        })
-                    })
-                })
-
-                if (event.keyCode == 13) {
-                    geocoder.query(contents, showMap);
-                    $('input').blur();
-                }
-
-            });
-
-            function showMap(err, data) {
-                map.setView([data.latlng[0], data.latlng[1]], 15);
-                marker.setLatLng([data.latlng[0], data.latlng[1]]);
-                updateVenues();
-            }
-
-            $('.leaflet-marker-draggable').on('mousewheel', function (event) {
-                var wheelDelta = event.originalEvent.wheelDeltaY;
-                if (currentRadius - wheelDelta * 0.001 >= 0.5 && currentRadius - wheelDelta * 0.001 <= 2) {
-                    currentRadius = currentRadius - wheelDelta * 0.001;
-                    updateVenues();
-                    var distancePhrase;
-                    switch (parseFloat(currentRadius.toFixed(2))) {
-                        case 0.50:
-                            distancePhrase = 'a half mile'
-                            break;
-                        case 1.00:
-                            distancePhrase = 'a mile'
-                            break;
-                        case 2.00:
-                            distancePhrase = 'two miles'
-                            break;
-                        default:
-                            distancePhrase = currentRadius.toFixed(2) + ' miles'
-                            break;
-                    }
-                    $('#distance').html(distancePhrase);
-                }
-
-                event.stopPropagation();
-                return false;
-            });
-
-            // get position, get radius, draw buffer, find within, calculate distances, find nearest, add to map
-            function updateVenues() {
-                $('path').remove();
-                $('.leaflet-marker-pane *').not(':first').remove();
-                var position = marker.getLatLng();
-                var point = turf.point(position.lng, position.lat);
-
-                //draw buffer
-                var bufferLayer = L.mapbox.featureLayer().addTo(map);
-                var buffer = pointBuffer(point, currentRadius, 'miles', 120);
-                buffer.properties = {
-                    "fill": "#00704A",
-                    "fill-opacity": 0.09,
-                    "stroke": "#00704A",
-                    "stroke-width": 2,
-                    "stroke-opacity": 0.5
-                };
-
-                bufferLayer.setGeoJSON(buffer);
-
-                var within = turf.featurecollection(fc.features.filter(function (shop) {
-                    if (turf.distance(shop, point, 'miles') <= currentRadius) return true;
-                }));
-                $('#milecount').html(within.features.length);
-
-                function mileConvert(miles) {
-                    if (miles <= 0.25) {
-                        return (miles * 5280).toFixed(0) + ' ft'
-                    } else {
-                        return miles.toFixed(2) + ' mi'
-                    }
-                }
-
-                within.features.forEach(function (feature) {
-                    var distance = parseFloat(turf.distance(point, feature, 'miles'));
-                    feature.properties["marker-color"] = "#6E6E6E";
-                    feature.properties["title"] = '<span>' + mileConvert(distance) + '</span><br>Name: ' + feature.properties["TOC"] + '<br>Address: ' + feature.properties["ADDRESS"] + '<br>Number of Bikes: ' + feature.properties["NUMBER_OF_BIKES"] + '<br>Empty Docks: ' + feature.properties["NUMBER_OF_EMPTY_DOCKS"] + '<br><strong>Click for walking route</strong>';
-                    feature.properties["marker-size"] = "medium";
-                    feature.properties["marker-symbol"] = "bicycle";
-                })
-
-                var nearest = turf.nearest(point, fc);
-                var nearestdist = parseFloat(turf.distance(point, nearest, 'miles'));
-
-                nearest.properties["marker-color"] = "#C73E3E";
-                nearest.properties["title"] = '<span>' + mileConvert(nearestdist) + '</span><br>Name: ' + nearest.properties["TOC"] + '<br>Address: ' + nearest.properties["ADDRESS"] + '<br>Number of Bikes: ' + nearest.properties["NUMBER_OF_BIKES"] + '<br>Empty Docks: ' + nearest.properties["NUMBER_OF_EMPTY_DOCKS"] + '<br><strong>Click for walking route</strong>';
-                nearest.properties["marker-size"] = "large";
-                nearest.properties["marker-symbol"] = "bicycle";
-
-                var nearest_fc = L.mapbox.featureLayer().setGeoJSON(turf.featurecollection([within, nearest])).addTo(map);
-
-                // hover tooltips and click to zoom/route functionality
-                nearest_fc
-                    .on('mouseover', function (e) {
-                        e.layer.openPopup();
-                    })
-                    .on('mouseout', function (e) {
-                        e.layer.closePopup();
-                    })
-                    .on('click', function (e) {
-
-                        // assemble directions URL based on position of user and selected cafe
-                        var startEnd = position.lng + ',' + position.lat + ';' + e.latlng.lng + ',' + e.latlng.lat;
-                        var directionsAPI = 'https://api.tiles.mapbox.com/v4/directions/mapbox.walking/' + startEnd + '.json?access_token=' + L.mapbox.accessToken;
-
-                        // query for directions and draw the path
-                        $.get(directionsAPI, function (data) {
-                            var coords = data.routes[0].geometry.coordinates;
-                            coords.unshift([position.lng, position.lat]);
-                            coords.push([e.latlng.lng, e.latlng.lat]);
-                            var path = turf.linestring(coords, {
-                                "stroke": "#00704A",
-                                "stroke-width": 4,
-                                "opacity": 1
-                            	});
-
-                            $('.distance-icon').remove();
-                            map.fitBounds(map.featureLayer.setGeoJSON(path).getBounds(), { padding: [100, 100] });
-                            window.setTimeout(function () {
-                                $('path').css('stroke-dashoffset', 0)
-                            }, 400);
-                            var duration = parseInt((data.routes[0].duration) / 60);
-                            if (duration < 100) {
-                                	L.marker([coords[parseInt(coords.length * 0.5)][1], coords[parseInt(coords.length * 0.5)][0]], {
-                                    	icon: L.divIcon({
-                                        	className: 'distance-icon',
-                                        	html: '<strong style="color:#00704A">' + duration + '</strong> <span class="micro">min</span>',
-                                        	iconSize: [45, 23]
-                                    		})
-                                	}).addTo(map);
-                            	}
-                      	  })
-                    });
-            }
-            marker.on('drag', function () {
-                updateVenues();
-            });
-            updateVenues();
-        });
-
-        getLocation();
-        marker.addTo(map);
-
-        //open About This panel
-        function openAbout() {
-            $("#about").show();
-            return false;
-        }
-
-        //close About This panel
-        function closeAbout() {
-            $("#about").hide();
-            return false;
-        }
-    </script>
-    <script>
-	  (function (w,i,d,g,e,t,s) {w[d] = w[d]||[];t= i.createElement(g);
-	    t.async=1;t.src=e;s=i.getElementsByTagName(g)[0];s.parentNode.insertBefore(t, s);
-	  })(window, document, '_gscq','script','//widgets.getsitecontrol.com/92044/script.js');
-	</script>
+            
+
+            <div id="search-panel">
+                <span style="font-weight: bold; color: white; margin-top: 2px; font-size: 1vw; display: block; ">Enter your location address</span>
+                
+                <div style="margin-right: 1vw; margin-top:2px; font-size:1vw">
+                    <fieldset class="fr with-icon inline" style="float:left;">
+                    <span class="icon search" style='top:5px; left:5px'></span>
+                    <input type="text" placeholder='Search' class="round short" autocomplete="on" style='width:15vw;margin-right:10px; background-color: white; color: #000;'>
+                        <div id='search-results'>
+                        </div>
+                    </fieldset>
+                    <span class='button short fr icon satellite' id='findme'>Use My Location</span>
+                </div>
+
+                <br><br><span id="geolocation-prompt" style="font-weight: bold; color: white; font-size: .8vw;">To use your current location,<br> enable browser's location tracking</span>
+            </div>
+            
+            <div id="result-div">
+                <span style="color:white; font-size:1vw">Found </span><span id='milecount' class='strong'>0</span><span style="color:white; font-size:1vw"> Bike Share Locations within </span><span id='distance' style="color:white; font-size:1vw">0.5 miles</span>
+            </div>
+
+            <div id='inputs'></div>
+            <div id='errors'></div>
+            <div id='directions'>
+                <div id='routes'></div>
+                <div id='instructions'></div>
+            </div>
+            
+            <pre id='coordinates' class='ui-coordinates'></pre>
+            
+            <div id="about">
+                <a id="dismiss-about" onclick="closeAbout()">×</a>
+                <div id="inner">
+                    <div id="logos" style="text-align: center">
+                        <a href="http://www.visitlongbeach.com"><img src="http://www.longbeach.gov/common/img/city-logo.png" title="Long Beach, California"></a>&nbsp&nbsp
+                        <a href="http://www.longbeachbikeshare.com"><img src="images/longbeach.png" title="Long Beach Bike Share Website" width=50 height=40></a>
+                    </div>
+                    
+                    <p style="font-size: 1em; text-transform: uppercase; text-align: center"><br>About this Web Map</p>
+                   
+                    <p style="font-size: 1em; text-align: center"><a href ="https://www.linkedin.com/in/anshu-pallav">Created by: Anshu Pallav</a><a href="https://github.com/anspal/lbgreentravel">&nbsp&nbsp(GitHub Page)</a></p>
+                    
+                    <p style="font-size: 1em">
+                        <strong>Instructions</strong>
+                        <br/> Click a location or enter an address to find bike share location around 0.5 miles buffer area. Drag the blue marker across the map and change the buffer area by scrolling. Hover and click the red bike share marker to get information, walking route and ETA. Use additional routing option to navigate from start to end location using driving, walking and cycling modes. Access basemap and data Layers from the layer list. Coordinate information is shown for the blue marker. Options to print map, share the website and submit suggestions are included in the website.
+                    </p>
+                    
+                    <p>
+                        <strong>Built with...</strong>
+                        <br /> <a href="https://www.mapbox.com/mapbox.js/api/v3.1.1/">Mapbox JS</a>, <a href="https://www.mapbox.com/analysis/">Turf</a>, <a href="https://jquery.com/">jQuery</a>, <a href="http://geoserver.org/">GeoServer</a>, <a href="https://www.postgresql.org/">PostgreSQL</a>, <a href="http://postgis.net/">PostGIS</a>, <a href="https://aws.amazon.com/">AWS</a>
+                    </p>
+                    
+                    <p>
+                        <strong><a href="http://datalb.longbeach.gov/" target="_blank">Long Beach Open Data Portal</a> &nbsp&nbsp                   
+                        <a href="https://hub.arcgis.com/pages/open-data" target="_blank">ArcGIS Hub Open GIS Data Services</a></strong>
+                    </p>
+                    
+                    <p style="font-size: 0.8em;">This website was developed as a part of final project for MS GIS Cohort #4 Batch 2017, California State University Long Beach.It was created using open source enterprise GIS architecture. Share the website and submit suggestion for improvement. Thank you for using this webmap!<br><center> GO GREEN !</center></p>
+                </div>
+            </div>
+
+            <div id="selectedFeatures" class="leaflet-bar map-text">Click to identify<a href="http://tsdgis.longbeach.gov/webgis/rest/services/OPENDATA/MapItData/MapServer">Name/Address</a></div>
+            
+         <script type='text/javascript' language='javascript' src='script.js'></script>
 </body>
 
 </html>
